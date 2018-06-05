@@ -3,17 +3,17 @@ version: '3.3'
 
 services:
 
-  java:
-    container_name: java
-    build:
-      context: ./services/java
-    image: yinfuyuan/java:8u171-jdk-centos7
-
-#  zookeeper-node1:
-#    container_name: zookeeper-node1
+#  java:
+#    container_name: java
 #    build:
-#      context: ./services/zookeeper
-#    image: yinfuyuan/zookeeper:3.4.12-centos7
+#      context: ./services/java
+#    image: yinfuyuan/java:8u171-jdk-centos7
+
+  zookeeper-node1:
+    container_name: zookeeper-node1
+    build:
+      context: ./services/zookeeper
+    image: yinfuyuan/zookeeper:3.4.12-centos7
 #
 #  zookeeper-node2:
 #    container_name: zookeeper-node2

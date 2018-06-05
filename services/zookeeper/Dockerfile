@@ -2,20 +2,26 @@ FROM yinfuyuan/java:8u171-jdk-centos7
 
 MAINTAINER yinfuyuan <yinfuyuan@gmail.com>
 
-#ENV JAVA_HOME=/usr/local/jdk1.8.0_171
-#
-#ENV JAVA_DOWNLOAD_URL="http://download.oracle.com/otn-pub/java/jdk/8u171-b11/512cd62ec5174c3487ac17c61aaa89e8/jdk-8u171-linux-x64.tar.gz?AuthParam=1528163111_aa9a4de9bef7f4cd06cba248b92c3e83" \
-#    JAVA_SHA="b6dd2837efaaec4109b36cfbb94a774db100029f98b0d78be68c27bec0275982" \
-#    PATH=${PATH}:${JAVA_HOME}/bin
-#
-#RUN set -x; \
-#    \
-#    yum install -y wget;\
-#    \
-#    wget -O jdk-8u171-linux-x64.tar.gz "${JAVA_DOWNLOAD_URL}"; \
-#    echo "${JAVA_SHA} jdk-8u171-linux-x64.tar.gz" | sha256sum -c -; \
-#    \
-#    mkdir -p /usr/local/hadoop; \
-#    tar -xzf jdk-8u171-linux-x64.tar.gz -C /usr/local/jdk1.8.0_171 --strip-components=1; \
-#    \
-#    rm -rf jdk-8u171-linux-x64.tar.gz
+ENV ZOOKEEPER_MAJOR=3.4 \
+    ZOOKEEPER_VERSION=3.4.12 \
+    ZOOKEEPER_HOME=/usr/local/zookeeper-3.4.12
+
+ENV ZOOKEEPER_DOWNLOAD_URL="https://www.apache.org/dist/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz" \
+    ZOOKEEPER_DOWNLOAD_SHA="https://www.apache.org/dist/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz.asc" \
+    PATH=${PATH}:${ZOOKEEPER_HOME}/bin
+
+RUN set -x; \
+    \
+    wget -O zookeeper-${ZOOKEEPER_VERSION}.tar.gz "${ZOOKEEPER_DOWNLOAD_URL}"; \
+    \
+    mkdir -p /usr/local/zookeeper-${ZOOKEEPER_VERSION} \
+        /usr/local/zookeeper-${ZOOKEEPER_VERSION}/data \
+        /usr/local/zookeeper-${ZOOKEEPER_VERSION}/logs; \
+    tar -xzf zookeeper-${ZOOKEEPER_VERSION}.tar.gz -C /usr/local/zookeeper-${ZOOKEEPER_VERSION} --strip-components=1; \
+    \
+    rm -rf zookeeper-${ZOOKEEPER_VERSION}.tar.gz
+
+COPY conf/zoo.cfg /usr/local/zookeeper-${ZOOKEEPER_VERSION}/conf/zoo.cfg
+
+CMD ["zkServer.sh", "start-foreground"]
+
