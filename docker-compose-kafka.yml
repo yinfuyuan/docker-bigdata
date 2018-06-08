@@ -9,20 +9,32 @@ services:
       context: ./services/kafka
     image: yinfuyuan/kafka:1.1.0-alpine
     hostname: kafka1
+    ports:
+      - 9092:9092
+    external_links:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
     environment:
       BROKER_ID: 1
-      LISTENERS: PLAINTEXT://127.0.0.1:9092
-      ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
-      ZOOKEEPER_CONNECT: zookeeper1:2181, zookeeper2:2181, zookeeper3:2181
+      LISTENERS: kafka1:9092
+      ADVERTISED_LISTENERS: kafka1:9092
+      ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
 
-#  kafka2:
-#    container_name: kafka2
-#    build:
-#      context: ./services/kafka
-#    image: yinfuyuan/kafka:1.1.0-alpine
-#    hostname: kafka2
-#    environment:
-#      BROKER_ID: 2
-#      LISTENERS: PLAINTEXT://127.0.0.1:9092
-#      ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
-#      ZOOKEEPER_CONNECT: zookeeper1:2181, zookeeper2:2181, zookeeper3:2181
+  kafka2:
+    container_name: kafka2
+    build:
+      context: ./services/kafka
+    image: yinfuyuan/kafka:1.1.0-alpine
+    hostname: kafka2
+    ports:
+      - 9093:9092
+    external_links:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      BROKER_ID: 2
+      LISTENERS: kafka2:9092
+      ADVERTISED_LISTENERS: kafka2:9092
+      ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
