@@ -28,6 +28,7 @@ RUN set -ex; \
     tar -xzf kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -C "$KAFKA_HOME" --strip-components=1; \
     \
     rm -rf \
+        KEYS \
         kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
         kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz.asc; \
     apk del .build-deps
