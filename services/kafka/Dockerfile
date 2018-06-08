@@ -2,35 +2,38 @@ FROM openjdk:8-jre-alpine
 
 MAINTAINER yinfuyuan <yinfuyuan@gmail.com>
 
-# Install required packages
-RUN apk add --no-cache \
-    bash \
-    su-exec
-
 ENV KAFKA_HOME=/usr/local/kafka \
-    KAFKA_USER=kafka
+    SCALA_VERSION=2.11 \
+    KAFKA_VERSION=1.1.0
 
-ENV KAFKA_CONF_DIR=${KAFKA_HOME}/config \
-    KAFKA_LOGS_DIR=${KAFKA_HOME}/logs \
+ENV KAFKA_DOWNLOAD_URL="http://mirror.bit.edu.cn/apache/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz" \
+    KAFKA_ASC_URL="http://www.us.apache.org/dist/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz.asc" \
+    KAFKA_KEYS_URL="http://www.us.apache.org/dist/kafka/KEYS" \
+    KAFKA_CONF_DIR=${KAFKA_HOME}/config \
     PATH=${PATH}:${KAFKA_HOME}/bin
 
-# Add a user and make dirs
-RUN set -ex; \
-    adduser -D "$KAFKA_USER"
-
-# Download Apache Kafka, untar and clean up
 RUN set -ex; \
     \
-    wget -O kafka_2.11-1.1.0.tgz "http://mirror.bit.edu.cn/apache/kafka/1.1.0/kafka_2.11-1.1.0.tgz"; \
+    apk add --no-cache bash; \
+    \
+    wget -O kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz "${KAFKA_DOWNLOAD_URL}"; \
+    wget -O kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz.asc "${KAFKA_ASC_URL}"; \
+    wget -O KEYS "${KAFKA_KEYS_URL}"; \
+    \
+    apk add --no-cache --virtual .build-deps gnupg; \
+    gpg --import KEYS; \
+    gpg --verify kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz.asc kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz; \
     \
     mkdir -p "$KAFKA_HOME"; \
-    tar -xzf kafka_2.11-1.1.0.tgz -C "$KAFKA_HOME" --strip-components=1; \
-    mkdir "$KAFKA_LOGS_DIR"; \
-    chown "$KAFKA_USER:$KAFKA_USER" "$KAFKA_HOME"; \
-    rm -rf kafka_2.11-1.1.0.tgz;
+    tar -xzf kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -C "$KAFKA_HOME" --strip-components=1; \
+    \
+    rm -rf \
+        kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
+        kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz.asc; \
+    apk del .build-deps
 
-COPY docker-entrypoint.sh /
+COPY ./config/server.properties $KAFKA_CONF_DIR/server.properties
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+COPY ./docker-entrypoint.sh /
 
-CMD ["kafka-server-start.sh /usr/local/kafka/config/server.properties"]
+CMD ["/docker-entrypoint.sh"]
