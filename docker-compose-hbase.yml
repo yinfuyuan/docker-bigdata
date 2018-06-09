@@ -1,0 +1,30 @@
+
+version: '3.3'
+
+services:
+
+  hbase1:
+    container_name: hbase1
+    build:
+      context: ./services/hbase
+    image: yinfuyuan/hbase:2.0.0-alpine
+    hostname: hbase1
+    external_links:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
+
+  hbase2:
+    container_name: hbase2
+    build:
+      context: ./services/hbase
+    image: yinfuyuan/hbase:2.0.0-alpine
+    hostname: hbase2
+    external_links:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
