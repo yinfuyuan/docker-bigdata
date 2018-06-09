@@ -6,6 +6,6 @@ services:
   hadoop1:
     container_name: hadoop1
     build:
-      context: ./services/hadoop/2.7/alpine
-    image: yinfuyuan/hadoop:2.7.6-alpine
+      context: ./services/hadoop/2.7
+    image: yinfuyuan/hadoop:2.7.6
     hostname: hadoop1
