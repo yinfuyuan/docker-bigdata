@@ -1,0 +1,11 @@
+
+version: '3.3'
+
+services:
+
+  hadoop1:
+    container_name: hadoop1
+    build:
+      context: ./services/hadoop/2.7/alpine
+    image: yinfuyuan/hadoop:2.7.6-alpine
+    hostname: hadoop1
