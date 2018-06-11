@@ -12,6 +12,3 @@ services:
     ports:
       - 50070:50070
       - 8088:8088
-      - 19888:19888
-    volumes:
-      - ./services/hadoop/2.7/etc:/usr/local/hadoop/etc
