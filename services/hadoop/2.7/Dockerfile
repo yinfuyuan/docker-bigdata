@@ -6,10 +6,10 @@ ENV HADOOP_MAJOR=2.7 \
     HADOOP_VERSION=2.7.6 \
     HADOOP_HOME=/usr/local/hadoop
 
-ENV HADOOP_DOWNLOAD_URL="http://www.us.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz" \
+ENV HADOOP_DOWNLOAD_URL="http://mirror.bit.edu.cn/apache/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz" \
     HADOOP_ASC_URL="http://www.us.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz.asc" \
     HADOOP_KEYS_URL="http://www.us.apache.org/dist/hadoop/common/KEYS" \
-    PATH=${PATH}:${HADOOP_HOME}/bin
+    PATH=${PATH}:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin
 
 RUN set -ex; \
     \
@@ -46,8 +46,8 @@ COPY etc/hadoop/ ${HADOOP_HOME}/etc/hadoop/
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-EXPOSE 9000
+EXPOSE 8088 9000 50070 19888
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-CMD ["hadoop-server"]
+CMD ["start-all.sh"]
