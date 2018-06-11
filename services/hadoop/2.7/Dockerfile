@@ -11,21 +11,17 @@ ENV HADOOP_DOWNLOAD_URL="http://www.us.apache.org/dist/hadoop/common/hadoop-${HA
     HADOOP_KEYS_URL="http://www.us.apache.org/dist/hadoop/common/KEYS" \
     PATH=${PATH}:${HADOOP_HOME}/bin
 
-COPY hadoop-2.7.6.tar.gz /
-
 RUN set -ex; \
     \
     apt-get update; \
-    apt-get install -y \
-#        bash \
-        openssh; \
+    apt-get install -y openssh-server; \
     \
     ssh-keygen -A; \
     ssh-keygen -t rsa -f ~/.ssh/id_rsa; \
     cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys; \
     echo "StrictHostKeyChecking no" >> ~/.ssh/config; \
     \
-#    wget -O "hadoop-${HADOOP_VERSION}.tar.gz" "${HADOOP_DOWNLOAD_URL}"; \
+    wget -O "hadoop-${HADOOP_VERSION}.tar.gz" "${HADOOP_DOWNLOAD_URL}"; \
     wget -O "hadoop-${HADOOP_VERSION}.tar.gz.asc" "${HADOOP_ASC_URL}"; \
     wget -O "KEYS" "${HADOOP_KEYS_URL}"; \
     \
@@ -42,6 +38,7 @@ RUN set -ex; \
         KEYS \
         hadoop-${HADOOP_VERSION}.tar.gz \
         hadoop-${HADOOP_VERSION}.tar.gz.asc \
+        ${HADOOP_HOME}/share/doc \
         /var/lib/apt/lists/*; \
     apt-get purge -y --auto-remove gnupg
 
@@ -49,8 +46,8 @@ COPY etc/hadoop/ ${HADOOP_HOME}/etc/hadoop/
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-#ENTRYPOINT ["docker-entrypoint.sh"]
-
 EXPOSE 9000
 
-CMD ["/usr/sbin/sshd", "-D"]
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD ["hadoop-server"]

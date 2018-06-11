@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
-/usr/sbin/sshd
+/etc/init.d/ssh start
 
 hadoop namenode -format
 
@@ -14,7 +14,7 @@ fi
 
 if [ "$1" = 'hadoop-server' ]; then
     kill $(pidof sshd)
-	/usr/sbin/sshd -D
+	/etc/init.d/ssh start -d
 fi
 
 exec "$@"
