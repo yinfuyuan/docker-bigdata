@@ -12,3 +12,41 @@ services:
     ports:
       - 50070:50070
       - 8088:8088
+    environment:
+      CLUSTER: 1
+      FS_DEFAULTFS: hadoop1:9000
+      SLAVES: hadoop2,hadoop3
+      DFS_REPLICATION: 2
+      YARN_RESOURCEMANAGER_HOSTNAME: hadoop1
+
+  hadoop2:
+    container_name: hadoop2
+    build:
+      context: ./services/hadoop/2.7
+    image: yinfuyuan/hadoop:2.7.6
+    hostname: hadoop2
+    ports:
+      - 50071:50070
+      - 8089:8088
+    environment:
+      CLUSTER: 1
+      FS_DEFAULTFS: hadoop1:9000
+      SLAVES: hadoop2,hadoop3
+      DFS_REPLICATION: 2
+      YARN_RESOURCEMANAGER_HOSTNAME: hadoop1
+
+  hadoop3:
+    container_name: hadoop3
+    build:
+      context: ./services/hadoop/2.7
+    image: yinfuyuan/hadoop:2.7.6
+    hostname: hadoop3
+    ports:
+      - 50072:50070
+      - 8090:8088
+    environment:
+      CLUSTER: 1
+      FS_DEFAULTFS: hadoop1:9000
+      SLAVES: hadoop2,hadoop3
+      DFS_REPLICATION: 2
+      YARN_RESOURCEMANAGER_HOSTNAME: hadoop1

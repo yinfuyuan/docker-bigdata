@@ -4,11 +4,14 @@ MAINTAINER yinfuyuan <yinfuyuan@gmail.com>
 
 ENV HADOOP_MAJOR=2.7 \
     HADOOP_VERSION=2.7.6 \
-    HADOOP_HOME=/usr/local/hadoop
+    HADOOP_HOME=/usr/local/hadoop \
+    HADOOP_LOG_DIR=/hadoop/logs \
+    HADOOP_PID_DIR=/hadoop/tmp
 
 ENV HADOOP_DOWNLOAD_URL="http://mirror.bit.edu.cn/apache/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz" \
     HADOOP_ASC_URL="http://www.us.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz.asc" \
     HADOOP_KEYS_URL="http://www.us.apache.org/dist/hadoop/common/KEYS" \
+    HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop \
     PATH=${PATH}:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin
 
 RUN set -ex; \
@@ -39,8 +42,8 @@ RUN set -ex; \
         hadoop-${HADOOP_VERSION}.tar.gz \
         hadoop-${HADOOP_VERSION}.tar.gz.asc \
         ${HADOOP_HOME}/share/doc \
-        /var/lib/apt/lists/*; \
-    apt-get purge -y --auto-remove gnupg
+        /var/lib/apt/lists/*;
+#    apt-get purge -y --auto-remove gnupg
 
 COPY etc/hadoop/ ${HADOOP_HOME}/etc/hadoop/
 
