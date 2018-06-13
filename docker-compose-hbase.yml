@@ -6,25 +6,65 @@ services:
   hbase1:
     container_name: hbase1
     build:
-      context: ./services/hbase
-    image: yinfuyuan/hbase:2.0.0-alpine
+      context: ./services/hbase/2.0
+    image: yinfuyuan/hbase:2.0.0
     hostname: hbase1
     external_links:
       - zookeeper1
       - zookeeper2
       - zookeeper3
+    ports:
+      - 50070:50070
+      - 16010:16010
     environment:
+      CLUSTER: 1
+      HDFS_FS_DEFAULTFS: hbase1:9000
+      HDFS_SLAVES: hbase2,hbase3
+      HDFS_DFS_REPLICATION: 2
+      HBASE_ROOTDIR_HDFS: hbase1:9000
+      HBASE_ROOTDIR: hbase
+      HBASE_CLUSTER_DISTRIBUTED: "true"
       HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
+      HBASE_REGIONSERVERS: hbase2,hbase3
 
   hbase2:
     container_name: hbase2
     build:
-      context: ./services/hbase
-    image: yinfuyuan/hbase:2.0.0-alpine
+      context: ./services/hbase/2.0
+    image: yinfuyuan/hbase:2.0.0
     hostname: hbase2
     external_links:
       - zookeeper1
       - zookeeper2
       - zookeeper3
     environment:
+      CLUSTER: 1
+      HDFS_FS_DEFAULTFS: hbase1:9000
+      HDFS_SLAVES: hbase2,hbase3
+      HDFS_DFS_REPLICATION: 2
+      HBASE_ROOTDIR_HDFS: hbase1:9000
+      HBASE_ROOTDIR: hbase
+      HBASE_CLUSTER_DISTRIBUTED: "true"
       HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
+      HBASE_REGIONSERVERS: hbase1,hbase2,hbase3
+
+  hbase3:
+    container_name: hbase3
+    build:
+      context: ./services/hbase/2.0
+    image: yinfuyuan/hbase:2.0.0
+    hostname: hbase3
+    external_links:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      CLUSTER: 1
+      HDFS_FS_DEFAULTFS: hbase1:9000
+      HDFS_SLAVES: hbase2,hbase3
+      HDFS_DFS_REPLICATION: 2
+      HBASE_ROOTDIR_HDFS: hbase1:9000
+      HBASE_ROOTDIR: hbase
+      HBASE_CLUSTER_DISTRIBUTED: "true"
+      HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
+      HBASE_REGIONSERVERS: hbase1,hbase2,hbase3
