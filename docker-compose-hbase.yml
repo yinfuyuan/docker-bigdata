@@ -14,7 +14,6 @@ services:
       - zookeeper2
       - zookeeper3
     ports:
-      - 50070:50070
       - 16010:16010
     environment:
       CLUSTER: 1
