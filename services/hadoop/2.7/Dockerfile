@@ -49,7 +49,7 @@ COPY etc/hadoop/ ${HADOOP_HOME}/etc/hadoop/
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-EXPOSE 8088 9000 50070
+EXPOSE 9000
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 

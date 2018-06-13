@@ -42,6 +42,8 @@ COPY etc/hadoop/hdfs-site.xml ${HADOOP_HOME}/etc/hadoop/hdfs-site.xml
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
+EXPOSE 16000
+
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["start-hbase.sh"]
