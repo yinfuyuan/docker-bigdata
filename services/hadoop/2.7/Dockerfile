@@ -42,7 +42,7 @@ RUN set -ex; \
         hadoop-${HADOOP_VERSION}.tar.gz \
         hadoop-${HADOOP_VERSION}.tar.gz.asc \
         ${HADOOP_HOME}/share/doc \
-        /var/lib/apt/lists/*;
+        /var/lib/apt/lists/*; \
     apt-get purge -y --auto-remove gnupg
 
 COPY etc/hadoop/ ${HADOOP_HOME}/etc/hadoop/
