@@ -20,11 +20,12 @@ services:
       HDFS_FS_DEFAULTFS: hbase1:9000
       HDFS_SLAVES: hbase2,hbase3
       HDFS_DFS_REPLICATION: 2
-      HBASE_ROOTDIR_HDFS: hbase1:9000
-      HBASE_ROOTDIR: hbase
+      HBASE_ROOTDIR: hbase1:9000/hbase
       HBASE_CLUSTER_DISTRIBUTED: "true"
+      HBASE_MASTER: "true"
+      HBASE_BACKUP_MASTER: hbase2
+      HBASE_REGION_SERVERS: hbase2,hbase3
       HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
-      HBASE_REGIONSERVERS: hbase2,hbase3
 
   hbase2:
     container_name: hbase2
@@ -41,11 +42,11 @@ services:
       HDFS_FS_DEFAULTFS: hbase1:9000
       HDFS_SLAVES: hbase2,hbase3
       HDFS_DFS_REPLICATION: 2
-      HBASE_ROOTDIR_HDFS: hbase1:9000
-      HBASE_ROOTDIR: hbase
+      HBASE_ROOTDIR: hbase1:9000/hbase
       HBASE_CLUSTER_DISTRIBUTED: "true"
+      HBASE_BACKUP_MASTER: hbase2
+      HBASE_REGION_SERVERS: hbase2,hbase3
       HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
-      HBASE_REGIONSERVERS: hbase1,hbase2,hbase3
 
   hbase3:
     container_name: hbase3
@@ -62,8 +63,8 @@ services:
       HDFS_FS_DEFAULTFS: hbase1:9000
       HDFS_SLAVES: hbase2,hbase3
       HDFS_DFS_REPLICATION: 2
-      HBASE_ROOTDIR_HDFS: hbase1:9000
-      HBASE_ROOTDIR: hbase
+      HBASE_ROOTDIR: hbase1:9000/hbase
       HBASE_CLUSTER_DISTRIBUTED: "true"
+      HBASE_BACKUP_MASTER: hbase2
+      HBASE_REGION_SERVERS: hbase2,hbase3
       HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
-      HBASE_REGIONSERVERS: hbase1,hbase2,hbase3
