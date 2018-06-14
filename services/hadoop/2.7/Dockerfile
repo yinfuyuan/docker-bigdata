@@ -2,27 +2,41 @@ FROM openjdk:8-jre
 
 MAINTAINER yinfuyuan <yinfuyuan@gmail.com>
 
-ENV HADOOP_MAJOR=2.7 \
-    HADOOP_VERSION=2.7.6 \
-    HADOOP_HOME=/usr/local/hadoop \
-    HADOOP_LOG_DIR=/hadoop/logs \
-    HADOOP_PID_DIR=/hadoop/tmp
+RUN groupadd -r hadoop && useradd -m -r -g hadoop hadoop
+
+ENV GOSU_VERSION=1.10
+
+RUN set -ex; \
+	\
+	dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
+	wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
+	wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
+	export GNUPGHOME="$(mktemp -d)"; \
+	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
+	gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
+	rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc; \
+	chmod +x /usr/local/bin/gosu; \
+	gosu nobody true
+
+ENV HADOOP_VERSION=2.7.6 \
+    HADOOP_HOME=/usr/local/hadoop
 
 ENV HADOOP_DOWNLOAD_URL="http://mirror.bit.edu.cn/apache/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz" \
     HADOOP_ASC_URL="http://www.us.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz.asc" \
     HADOOP_KEYS_URL="http://www.us.apache.org/dist/hadoop/common/KEYS" \
-    HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop \
     PATH=${PATH}:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin
 
 RUN set -ex; \
     \
     apt-get update; \
-    apt-get install -y openssh-server; \
+    apt-get install -y \
+        rsync \
+        openssh-server; \
     \
     ssh-keygen -A; \
-    ssh-keygen -t rsa -f ~/.ssh/id_rsa; \
-    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys; \
-    echo "StrictHostKeyChecking no" >> ~/.ssh/config; \
+    gosu hadoop ssh-keygen -t rsa -f /home/hadoop/.ssh/id_rsa; \
+    gosu hadoop cat /home/hadoop/.ssh/id_rsa.pub >> /home/hadoop/.ssh/authorized_keys; \
+    gosu hadoop echo "StrictHostKeyChecking no" >> /home/hadoop/.ssh/config; \
     \
     wget -O "hadoop-${HADOOP_VERSION}.tar.gz" "${HADOOP_DOWNLOAD_URL}"; \
     wget -O "hadoop-${HADOOP_VERSION}.tar.gz.asc" "${HADOOP_ASC_URL}"; \
@@ -36,6 +50,8 @@ RUN set -ex; \
     tar -xzf "hadoop-${HADOOP_VERSION}.tar.gz" -C "${HADOOP_HOME}" --strip-components=1; \
     \
     ln -s ${HADOOP_HOME}/etc/hadoop /etc/hadoop; \
+    \
+    mkdir /hadoop && chown -R hadoop:hadoop /hadoop; \
     \
     rm -rf \
         KEYS \

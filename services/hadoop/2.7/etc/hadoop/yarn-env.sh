@@ -88,7 +88,8 @@ fi
 # so that filenames w/ spaces are handled correctly in loops below
 IFS=
 
-export YARN_LOG_DIR=/hadoop/logs/yarn
+export YARN_PID_DIR=/hadoop/tmp
+export YARN_LOG_DIR=/hadoop/logs/$USER
 
 # default log directory & file
 if [ "$YARN_LOG_DIR" = "" ]; then

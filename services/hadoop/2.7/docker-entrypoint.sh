@@ -2,28 +2,31 @@
 
 set -e
 
-if [[ -n "$CLUSTER" ]]; then
-    if [[ -n "$FS_DEFAULTFS" ]]; then
-        sed -i s/"hdfs:\/\/localhost:9000"/"hdfs:\/\/$FS_DEFAULTFS"/g "$HADOOP_CONF_DIR/core-site.xml"
-    fi
+if [[ -n "$HADOOP_CLUSTER" ]]; then
+    HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
     if [[ -n "$SLAVES" ]]; then
-        echo $SLAVES > "$HADOOP_CONF_DIR/slaves"
-        sed -i s/","/"\n"/g "$HADOOP_CONF_DIR/slaves"
+        echo -e "${SLAVES/,/\\n}" > "$HADOOP_CONF_DIR/slaves"
     fi
-    if [[ -n "$DFS_REPLICATION" ]]; then
-        sed -i s/"<value>1<\/value>"/"<value>$DFS_REPLICATION<\/value>"/g "$HADOOP_CONF_DIR/hdfs-site.xml"
+    if [[ -n "$FS_DEFAULTFS" ]]; then
+        sed -i "/<name>fs.defaultFS<\/name>/{n;s/<value>.*<\/value>/<value>${FS_DEFAULTFS////\\/}<\/value>/g}" "$HADOOP_CONF_DIR/core-site.xml"
     fi
-    if [[ -n "$YARN_RESOURCEMANAGER_HOSTNAME" ]]; then
-        sed -i s/"0.0.0.0"/"$YARN_RESOURCEMANAGER_HOSTNAME"/g "$HADOOP_CONF_DIR/yarn-site.xml"
-    fi
+    sed -i "/<name>dfs.replication<\/name>/{n;s/<value>.*<\/value>/<value>${DFS_REPLICATION:-1}<\/value>/g}" "$HADOOP_CONF_DIR/hdfs-site.xml"
+    sed -i "/<name>yarn.resourcemanager.hostname<\/name>/{n;s/<value>.*<\/value>/<value>${YARN_RESOURCEMANAGER_HOSTNAME:-0.0.0.0}<\/value>/g}" "$HADOOP_CONF_DIR/yarn-site.xml"
 fi
 
 if [ "$1" = 'start-all.sh' ]; then
     /etc/init.d/ssh start
-    hdfs namenode -format
-    start-dfs.sh
-    start-yarn.sh
-    tail -f /dev/null
+    gosu hadoop /usr/local/hadoop/bin/hdfs namenode -format
+    if [[ -z "$HADOOP_CLUSTER" || -n "$HDFS_MASTER" ]]; then
+        gosu hadoop /usr/local/hadoop/sbin/start-dfs.sh
+    fi
+    if [[ -z "$HADOOP_CLUSTER" || -n "$YARN_MASTER" ]]; then
+        gosu hadoop /usr/local/hadoop/sbin/start-yarn.sh
+    fi
+    if [[ -z "$HADOOP_CLUSTER" || -n "$HISTORY_MASTER" ]]; then
+        gosu hadoop /usr/local/hadoop/sbin/mr-jobhistory-daemon.sh start historyserver
+    fi
+    gosu hadoop tail -f /dev/null
 fi
 
 exec "$@"
