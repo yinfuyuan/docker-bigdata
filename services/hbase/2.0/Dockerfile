@@ -2,8 +2,9 @@ FROM yinfuyuan/hadoop:2.7.6
 
 MAINTAINER yinfuyuan <yinfuyuan@gmail.com>
 
-ENV HBASE_MAJOR=2.0 \
-    HBASE_VERSION=2.0.0 \
+RUN groupadd -r hbase && useradd -m -r -g hbase hbase
+
+ENV HBASE_VERSION=2.0.0 \
     HBASE_HOME=/usr/local/hbase
 
 ENV HBASE_DOWNLOAD_URL="http://mirror.bit.edu.cn/apache/hbase/${HBASE_VERSION}/hbase-${HBASE_VERSION}-bin.tar.gz" \
@@ -13,12 +14,15 @@ ENV HBASE_DOWNLOAD_URL="http://mirror.bit.edu.cn/apache/hbase/${HBASE_VERSION}/h
 
 RUN set -ex; \
     \
-    apt-get update; \
+    gosu hbase ssh-keygen -t rsa -f /home/hbase/.ssh/id_rsa; \
+    gosu hbase cat /home/hbase/.ssh/id_rsa.pub >> /home/hbase/.ssh/authorized_keys; \
+    gosu hbase echo "StrictHostKeyChecking no" >> /home/hbase/.ssh/config; \
     \
     wget -O "hbase-${HBASE_VERSION}-bin.tar.gz" "${HBASE_DOWNLOAD_URL}"; \
     wget -O "hbase-${HBASE_VERSION}-bin.tar.gz.asc" "${HBASE_ASC_URL}"; \
     wget -O "KEYS" "${HBASE_KEYS_URL}"; \
     \
+    apt-get update; \
     apt-get install -y --no-install-recommends gnupg; \
     gpg --import KEYS; \
     gpg --verify "hbase-${HBASE_VERSION}-bin.tar.gz.asc" "hbase-${HBASE_VERSION}-bin.tar.gz"; \
@@ -27,6 +31,8 @@ RUN set -ex; \
     tar -xzf "hbase-${HBASE_VERSION}-bin.tar.gz" -C "${HBASE_HOME}" --strip-components=1; \
     \
     ln -s ${HBASE_HOME}/conf /etc/hbase; \
+    \
+    mkdir /hbase && chown -R hbase:hbase /hbase; \
     \
     rm -rf \
         KEYS \

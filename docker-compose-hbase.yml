@@ -14,13 +14,15 @@ services:
       - zookeeper2
       - zookeeper3
     ports:
+      - 50070:50070
       - 16010:16010
     environment:
-      CLUSTER: 1
-      HDFS_FS_DEFAULTFS: hbase1:9000
+      HBASE_CLUSTER: "true"
+      HDFS_MASTER: "true"
+      HDFS_FS_DEFAULTFS: hdfs://hbase1:9000
       HDFS_SLAVES: hbase2,hbase3
       HDFS_DFS_REPLICATION: 2
-      HBASE_ROOTDIR: hbase1:9000/hbase
+      HBASE_ROOTDIR: hdfs://hbase1:9000/hbase
       HBASE_CLUSTER_DISTRIBUTED: "true"
       HBASE_MASTER: "true"
       HBASE_BACKUP_MASTER: hbase2
@@ -38,11 +40,11 @@ services:
       - zookeeper2
       - zookeeper3
     environment:
-      CLUSTER: 1
-      HDFS_FS_DEFAULTFS: hbase1:9000
+      HBASE_CLUSTER: "true"
+      HDFS_FS_DEFAULTFS: hdfs://hbase1:9000
       HDFS_SLAVES: hbase2,hbase3
       HDFS_DFS_REPLICATION: 2
-      HBASE_ROOTDIR: hbase1:9000/hbase
+      HBASE_ROOTDIR: hdfs://hbase1:9000/hbase
       HBASE_CLUSTER_DISTRIBUTED: "true"
       HBASE_BACKUP_MASTER: hbase2
       HBASE_REGION_SERVERS: hbase2,hbase3
@@ -59,11 +61,11 @@ services:
       - zookeeper2
       - zookeeper3
     environment:
-      CLUSTER: 1
-      HDFS_FS_DEFAULTFS: hbase1:9000
+      HBASE_CLUSTER: "true"
+      HDFS_FS_DEFAULTFS: hdfs://hbase1:9000
       HDFS_SLAVES: hbase2,hbase3
       HDFS_DFS_REPLICATION: 2
-      HBASE_ROOTDIR: hbase1:9000/hbase
+      HBASE_ROOTDIR: hdfs://hbase1:9000/hbase
       HBASE_CLUSTER_DISTRIBUTED: "true"
       HBASE_BACKUP_MASTER: hbase2
       HBASE_REGION_SERVERS: hbase2,hbase3
