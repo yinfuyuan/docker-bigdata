@@ -2,7 +2,7 @@ FROM openjdk:8-jre
 
 MAINTAINER yinfuyuan <yinfuyuan@gmail.com>
 
-RUN groupadd -r hadoop && useradd -m -r -g hadoop hadoop
+RUN groupadd -r apache && useradd -m -r -g apache hadoop
 
 ENV GOSU_VERSION=1.10
 
@@ -51,7 +51,7 @@ RUN set -ex; \
     \
     ln -s ${HADOOP_HOME}/etc/hadoop /etc/hadoop; \
     \
-    mkdir /hadoop && chown -R hadoop:hadoop /hadoop; \
+    mkdir /hadoop && chown -R hadoop:apache /hadoop; \
     \
     rm -rf \
         KEYS \

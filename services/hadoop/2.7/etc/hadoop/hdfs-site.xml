@@ -18,15 +18,23 @@
 
 <configuration>
     <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///hadoop/dfs/name1,file:///hadoop/dfs/name2</value>
+    </property>
+    <property>
         <name>dfs.replication</name>
         <value>1</value>
     </property>
     <property>
-        <name>dfs.namenode.name.dir</name>
-        <value>/hadoop/dfs/name</value>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///hadoop/dfs/data1,file:///hadoop/dfs/data2</value>
     </property>
     <property>
-        <name>dfs.datanode.data.dir</name>
-        <value>/hadoop/dfs/data</value>
+        <name>dfs.namenode.checkpoint.dir</name>
+        <value>file:///hadoop/dfs/namesecondary1,file:///hadoop/dfs/namesecondary2</value>
+    </property>
+    <property>
+        <name>dfs.permissions.superusergroup</name>
+        <value>apache</value>
     </property>
 </configuration>
