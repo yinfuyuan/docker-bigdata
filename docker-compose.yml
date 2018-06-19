@@ -8,8 +8,6 @@ services:
     image: zookeeper:3.4.12
     restart: always
     hostname: zookeeper1
-    ports:
-      - 2181:2181
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=0.0.0.0:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
@@ -19,8 +17,6 @@ services:
     image: zookeeper:3.4.12
     restart: always
     hostname: zookeeper2
-    ports:
-      - 2182:2181
     environment:
       ZOO_MY_ID: 2
       ZOO_SERVERS: server.1=zookeeper1:2888:3888 server.2=0.0.0.0:2888:3888 server.3=zookeeper3:2888:3888
@@ -30,44 +26,137 @@ services:
     image: zookeeper:3.4.12
     restart: always
     hostname: zookeeper3
-    ports:
-      - 2183:2181
     environment:
       ZOO_MY_ID: 3
       ZOO_SERVERS: server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=0.0.0.0:2888:3888
 
-  kafka1:
-    container_name: kafka1
-    build:
-      context: ./services/kafka
-    image: yinfuyuan/kafka:1.1.0-alpine
-    hostname: kafka1
+  hadoop1:
+    container_name: hadoop1
+    image: yinfuyuan/hadoop:2.7.6
+    hostname: hadoop1
     ports:
-      - 9092:9092
+      - 50070:50070
+      - 8088:8088
+      - 19888:19888
+    environment:
+      HADOOP_CLUSTER: "true"
+      HDFS_MASTER: "true"
+      YARN_MASTER: "true"
+      HISTORY_MASTER: "true"
+      FS_DEFAULTFS: hdfs://hadoop1:9000
+      SLAVES: hadoop2,hadoop3
+      DFS_REPLICATION: 2
+      YARN_RESOURCEMANAGER_HOSTNAME: hadoop1
+
+  hadoop2:
+    container_name: hadoop2
+    image: yinfuyuan/hadoop:2.7.6
+    hostname: hadoop2
+    environment:
+      HADOOP_CLUSTER: "true"
+      FS_DEFAULTFS: hdfs://hadoop1:9000
+      SLAVES: hadoop2,hadoop3
+      DFS_REPLICATION: 2
+      YARN_RESOURCEMANAGER_HOSTNAME: hadoop1
+
+  hadoop3:
+    container_name: hadoop3
+    image: yinfuyuan/hadoop:2.7.6
+    hostname: hadoop3
+    environment:
+      HADOOP_CLUSTER: "true"
+      FS_DEFAULTFS: hdfs://hadoop1:9000
+      SLAVES: hadoop2,hadoop3
+      DFS_REPLICATION: 2
+      YARN_RESOURCEMANAGER_HOSTNAME: hadoop1
+
+  hbase1:
+    container_name: hbase1
+    image: yinfuyuan/hbase:2.0.0
+    hostname: hbase1
+    links:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    ports:
+      - 16010:16010
+    environment:
+      HBASE_CLUSTER: "true"
+      HDFS_MASTER: "true"
+      HDFS_FS_DEFAULTFS: hdfs://hbase1:9000
+      HDFS_SLAVES: hbase2,hbase3
+      HDFS_DFS_REPLICATION: 2
+      HBASE_ROOTDIR: hdfs://hbase1:9000/hbase
+      HBASE_CLUSTER_DISTRIBUTED: "true"
+      HBASE_MASTER: "true"
+      HBASE_BACKUP_MASTER: hbase2
+      HBASE_REGION_SERVERS: hbase2,hbase3
+      HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
+
+  hbase2:
+    container_name: hbase2
+    image: yinfuyuan/hbase:2.0.0
+    hostname: hbase2
     links:
       - zookeeper1
       - zookeeper2
       - zookeeper3
     environment:
+      HBASE_CLUSTER: "true"
+      HDFS_FS_DEFAULTFS: hdfs://hbase1:9000
+      HDFS_SLAVES: hbase2,hbase3
+      HDFS_DFS_REPLICATION: 2
+      HBASE_ROOTDIR: hdfs://hbase1:9000/hbase
+      HBASE_CLUSTER_DISTRIBUTED: "true"
+      HBASE_BACKUP_MASTER: hbase2
+      HBASE_REGION_SERVERS: hbase2,hbase3
+      HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
+
+  hbase3:
+    container_name: hbase3
+    image: yinfuyuan/hbase:2.0.0
+    hostname: hbase3
+    links:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      HBASE_CLUSTER: "true"
+      HDFS_FS_DEFAULTFS: hdfs://hbase1:9000
+      HDFS_SLAVES: hbase2,hbase3
+      HDFS_DFS_REPLICATION: 2
+      HBASE_ROOTDIR: hdfs://hbase1:9000/hbase
+      HBASE_CLUSTER_DISTRIBUTED: "true"
+      HBASE_BACKUP_MASTER: hbase2
+      HBASE_REGION_SERVERS: hbase2,hbase3
+      HBASE_ZOOKEEPER_QUORUM: zookeeper1,zookeeper2,zookeeper3
+
+  kafka1:
+    container_name: kafka1
+    image: yinfuyuan/kafka:1.1.0-alpine
+    hostname: kafka1
+    links:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      KAFKA_CLUSTER: "true"
       BROKER_ID: 1
-      LISTENERS: kafka1:9092
-      ADVERTISED_LISTENERS: kafka1:9092
+      LISTENERS: PLAINTEXT://kafka1:9092
+      ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092
       ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
 
   kafka2:
     container_name: kafka2
-    build:
-      context: ./services/kafka
     image: yinfuyuan/kafka:1.1.0-alpine
     hostname: kafka2
-    ports:
-      - 9093:9092
     links:
       - zookeeper1
       - zookeeper2
       - zookeeper3
     environment:
+      KAFKA_CLUSTER: "true"
       BROKER_ID: 2
-      LISTENERS: kafka2:9092
-      ADVERTISED_LISTENERS: kafka2:9092
+      LISTENERS: PLAINTEXT://kafka2:9092
+      ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092
       ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181

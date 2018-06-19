@@ -9,8 +9,6 @@ services:
       context: ./services/kafka/1.1
     image: yinfuyuan/kafka:1.1.0-alpine
     hostname: kafka1
-    ports:
-      - 9092:9092
     external_links:
       - zookeeper1
       - zookeeper2
@@ -28,8 +26,6 @@ services:
       context: ./services/kafka/1.1
     image: yinfuyuan/kafka:1.1.0-alpine
     hostname: kafka2
-    ports:
-      - 9093:9092
     external_links:
       - zookeeper1
       - zookeeper2
