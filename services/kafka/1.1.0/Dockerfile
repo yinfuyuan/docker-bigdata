@@ -1,6 +1,10 @@
-FROM openjdk:8-jre-alpine
+FROM zookeeper:3.4.12
 
 MAINTAINER yinfuyuan <yinfuyuan@gmail.com>
+
+WORKDIR /
+
+RUN adduser -D kafka
 
 ENV KAFKA_HOME=/usr/local/kafka \
     SCALA_VERSION=2.11 \
@@ -12,8 +16,6 @@ ENV KAFKA_DOWNLOAD_URL="http://mirror.bit.edu.cn/apache/kafka/${KAFKA_VERSION}/k
     PATH=${PATH}:${KAFKA_HOME}/bin
 
 RUN set -ex; \
-    \
-    apk add --no-cache bash; \
     \
     wget -O kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz "${KAFKA_DOWNLOAD_URL}"; \
     wget -O kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz.asc "${KAFKA_ASC_URL}"; \
@@ -27,6 +29,8 @@ RUN set -ex; \
     tar -xzf kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -C "$KAFKA_HOME" --strip-components=1; \
     \
     ln -s ${KAFKA_HOME}/config /etc/kafka; \
+    \
+    mkdir /kafka && chown -R kafka:kafka /kafka; \
     \
     rm -rf \
         KEYS \
