@@ -2,7 +2,7 @@ FROM yinfuyuan/hadoop:2.7.6
 
 MAINTAINER yinfuyuan <yinfuyuan@gmail.com>
 
-RUN groupadd -r hbase && useradd -m -r -g hbase hbase
+RUN useradd -m -r -g apache hbase
 
 ENV HBASE_VERSION=2.0.0 \
     HBASE_HOME=/usr/local/hbase
@@ -32,7 +32,7 @@ RUN set -ex; \
     \
     ln -s ${HBASE_HOME}/conf /etc/hbase; \
     \
-    mkdir /hbase && chown -R hbase:hbase /hbase; \
+    mkdir /hbase && chown -R hbase:apache /hbase; \
     \
     rm -rf \
         KEYS \
@@ -43,8 +43,6 @@ RUN set -ex; \
     apt-get purge -y --auto-remove gnupg
 
 COPY conf/ ${HBASE_HOME}/conf/
-
-COPY etc/hadoop/hdfs-site.xml ${HADOOP_HOME}/etc/hadoop/hdfs-site.xml
 
 COPY docker-entrypoint.sh /usr/local/bin/
 

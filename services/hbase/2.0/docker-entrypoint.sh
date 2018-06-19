@@ -12,6 +12,7 @@ if [[ -n "$HBASE_CLUSTER" ]]; then
         echo -e "${HDFS_SLAVES/,/\\n}" > "$HADOOP_CONF_DIR/slaves"
     fi
     sed -i "/<name>dfs.replication<\/name>/{n;s/<value>.*<\/value>/<value>${HDFS_DFS_REPLICATION:-1}<\/value>/g}" "$HADOOP_CONF_DIR/hdfs-site.xml"
+    sed -i "s/<\/configuration>/<property>\n<name>dfs.datanode.max.transfer.threads<\/name>\n<value>4096<\/value>\n<\/property>\n<\/configuration>/g" "$HADOOP_CONF_DIR/hdfs-site.xml"
 
     HBASE_CONF_DIR=${HBASE_HOME}/conf
     if [[ -n "$HBASE_ROOTDIR" ]]; then
