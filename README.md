@@ -20,25 +20,36 @@ docker-compose version 1.16.1 or higher
     
     $ git clone https://github.com/yinfuyuan/docker-apache.git
 
-## services
-    
-    You can start all the services using the following command:
-    
+## Services
+
+You can start all services like this:
+
     #docker-compose up -d
+
+You can start some of the services you need like this:
+
+    #docker-compose up -d SERVICE1 SERVICE2
     
-    If you want to start a service separately, start the service that the service depends on.
-    Here are some examples of starting and stopping services:
-        
-    up
+example:
+
+    #docker-compose up -d zookeeper1 zookeeper2 zookeeper3 hbase1 hbase2 hbase3
+    
+You can also start them using yam files like this:
+
     #docker-compose [-f docker-compose-SERVICE.yml] up -d
-    start
-    #docker-compose [-f docker-compose-SERVICE.yml] start
-    stop
-    #docker-compose [-f docker-compose-SERVICE.yml] stop
-    restart
-    #docker-compose [-f docker-compose-SERVICE.yml] restart
-    down
-    #docker-compose [-f docker-compose-SERVICE.yml] down
+    
+example:
+
+    #docker-compose -f docker-compose-zookeeper.yml up -d
+    #docker-compose -f docker-compose-hbase.yml up -d
+    
+The command above started the zookeeper and hbase service cluster,you can use
+a browser to enter the host machine ip and 16010 port to view hbase status.
+    
+All images have been built and in the dockerhub, you can directly download to use, 
+but if you use yml file start for the first time and you don't have local image, 
+docker will try to build them not to download, It may waste your time.
+If this is not what you want, try starting after manually removing the build option from yml file.
 
 ### zookeeper
     
