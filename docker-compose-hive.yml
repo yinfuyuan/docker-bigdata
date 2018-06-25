@@ -1,0 +1,31 @@
+
+version: '3.3'
+
+services:
+
+  hive1:
+    container_name: hive1
+    build:
+      context: ./services/hive/2.3
+    image: yinfuyuan/hive:2.3.3
+    hostname: hive1
+    external_links:
+      - mysql1
+
+  hive2:
+    container_name: hive2
+    build:
+      context: ./services/hive/2.3
+    image: yinfuyuan/hive:2.3.3
+    hostname: hive2
+    external_links:
+      - mysql1
+
+  hive3:
+    container_name: hive3
+    build:
+      context: ./services/hive/2.3
+    image: yinfuyuan/hive:2.3.3
+    hostname: hive3
+    external_links:
+      - mysql1
