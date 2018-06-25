@@ -6,8 +6,6 @@ The services provided include but not limited to **hadoop** **hbase** **kafka** 
 
 You can run this software on linux or windows or mac, recommending use of x86_64 linux platforms.
 
-If you run on a mac, please reference https://docs.docker.com/docker-for-mac/osxfs/#namespaces share you mount directory.
-
 ## Dependencies
 
 git version 1.8.3.1 or higher
@@ -18,7 +16,7 @@ docker-compose version 1.16.1 or higher
 
 ## Get installed
     
-    $ git clone https://github.com/yinfuyuan/docker-apache.git
+    $ git clone https://github.com/yinfuyuan/docker-bigdata.git
 
 ## Services
 
@@ -55,16 +53,16 @@ If this is not what you want, try starting after manually removing the build opt
     
     The service from the zookeeper official image
     version 3.4.12
-    [image](https://hub.docker.com/_/zookeeper/)
-    [Dockerfile](https://github.com/31z4/zookeeper-docker/blob/0e558d7a6df4031a6be7c1df4ba1e2367666d004/3.4.12/Dockerfile)
+    image：https://hub.docker.com/_/zookeeper/
+    Dockerfile：https://github.com/31z4/zookeeper-docker/blob/0e558d7a6df4031a6be7c1df4ba1e2367666d004/3.4.12/Dockerfile
     
 ### hadoop
     
     The service from the hadoop image, if you use docker-compose-hadoop.yml for the first time,it automatically builds the image.
     You can comment out the build option to direct to use image.
     version 2.7.6
-    [image](https://hub.docker.com/r/yinfuyuan/hadoop/)
-    [Dockerfile](https://github.com/yinfuyuan/docker-apache/blob/master/services/hadoop/2.7/Dockerfile)
+    image：https://hub.docker.com/r/yinfuyuan/hadoop/
+    Dockerfile：https://github.com/yinfuyuan/docker-bigdata/blob/master/services/hadoop/2.7/Dockerfile
     
     After you up the service you can use the host machine ip:50070 view the
     hdfs and use the host machine ip:8088 view yarn
@@ -76,8 +74,8 @@ If this is not what you want, try starting after manually removing the build opt
     The service from the hbase image, if you use docker-compose-hbase.yml for the first time,it automatically builds the image.
     You can comment out the build option to direct to use image.
     version 2.0.0
-    [image](https://hub.docker.com/r/yinfuyuan/hbase/)
-    [Dockerfile](https://github.com/yinfuyuan/docker-apache/blob/master/services/hbase/2.0/Dockerfile)
+    image：https://hub.docker.com/r/yinfuyuan/hbase/
+    Dockerfile：https://github.com/yinfuyuan/docker-bigdata/blob/master/services/hbase/2.0/Dockerfile
     
     After you up the service you can use the host machine ip:16010 view the hbase.
     
@@ -88,5 +86,5 @@ If this is not what you want, try starting after manually removing the build opt
     The service from the kafak image, if you use docker-compose-kafka.yml for the first time,it automatically builds the image.
     You can comment out the build option to direct to use image.
     version 1.1.0
-    [image](https://hub.docker.com/r/yinfuyuan/kafka/)
-    [Dockerfile](https://github.com/yinfuyuan/docker-apache/blob/master/services/kafka/Dockerfile)
+    image：https://hub.docker.com/r/yinfuyuan/kafka/
+    Dockerfile：https://github.com/yinfuyuan/docker-bigdata/blob/master/services/kafka/Dockerfile
