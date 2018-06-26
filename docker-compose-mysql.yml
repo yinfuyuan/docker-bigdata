@@ -3,11 +3,14 @@ version: '3.3'
 
 services:
 
-  mysql1:
-    container_name: mysql1
+  bigdata_mysql1:
+    container_name: bigdata_mysql1
     image: mysql:5.7.19
+    hostname: bigdata_mysql1
+    ports:
+      - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: hive
-      MYSQL_PASSWORD: hive
-      MYSQL_DATABASE: hive
+      MYSQL_USER: bigdata
+      MYSQL_PASSWORD: bigdata
+      MYSQL_DATABASE: bigdata
