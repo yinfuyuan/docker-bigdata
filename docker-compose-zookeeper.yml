@@ -3,29 +3,26 @@ version: '3.3'
 
 services:
 
-  zookeeper1:
-    container_name: zookeeper1
+  bigdata-zookeeper1:
+    container_name: bigdata-zookeeper1
     image: zookeeper:3.4.12
-    restart: always
-    hostname: zookeeper1
+    hostname: bigdata-zookeeper1
     environment:
       ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=0.0.0.0:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888 server.2=bigdata-zookeeper2:2888:3888 server.3=bigdata-zookeeper3:2888:3888
 
-  zookeeper2:
-    container_name: zookeeper2
+  bigdata-zookeeper2:
+    container_name: bigdata-zookeeper2
     image: zookeeper:3.4.12
-    restart: always
-    hostname: zookeeper2
+    hostname: bigdata-zookeeper2
     environment:
       ZOO_MY_ID: 2
-      ZOO_SERVERS: server.1=zookeeper1:2888:3888 server.2=0.0.0.0:2888:3888 server.3=zookeeper3:2888:3888
+      ZOO_SERVERS: server.1=bigdata-zookeeper1:2888:3888 server.2=0.0.0.0:2888:3888 server.3=bigdata-zookeeper3:2888:3888
 
-  zookeeper3:
-    container_name: zookeeper3
+  bigdata-zookeeper3:
+    container_name: bigdata-zookeeper3
     image: zookeeper:3.4.12
-    restart: always
-    hostname: zookeeper3
+    hostname: bigdata-zookeeper3
     environment:
       ZOO_MY_ID: 3
-      ZOO_SERVERS: server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=0.0.0.0:2888:3888
+      ZOO_SERVERS: server.1=bigdata-zookeeper1:2888:3888 server.2=bigdata-zookeeper2:2888:3888 server.3=0.0.0.0:2888:3888

@@ -3,10 +3,10 @@ version: '3.3'
 
 services:
 
-  bigdata_mysql1:
-    container_name: bigdata_mysql1
+  bigdata-mysql1:
+    container_name: bigdata-mysql1
     image: mysql:5.7.19
-    hostname: bigdata_mysql1
+    hostname: bigdata-mysql1
     ports:
       - 3306:3306
     environment:

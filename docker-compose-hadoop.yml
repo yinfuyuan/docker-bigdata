@@ -3,12 +3,12 @@ version: '3.3'
 
 services:
 
-  hadoop1:
-    container_name: hadoop1
+  bigdata-hadoop1:
+    container_name: bigdata-hadoop1
     build:
       context: ./services/hadoop/2.7
     image: yinfuyuan/hadoop:2.7.6
-    hostname: hadoop1
+    hostname: bigdata-hadoop1
     ports:
       - 50070:50070
       - 8088:8088
@@ -18,33 +18,33 @@ services:
       HDFS_MASTER: "true"
       YARN_MASTER: "true"
       HISTORY_MASTER: "true"
-      FS_DEFAULTFS: hdfs://hadoop1:9000
-      SLAVES: hadoop2,hadoop3
+      FS_DEFAULTFS: hdfs://bigdata-hadoop1:9000
+      SLAVES: bigdata-hadoop2,bigdata-hadoop3
       DFS_REPLICATION: 2
-      YARN_RESOURCEMANAGER_HOSTNAME: hadoop1
+      YARN_RESOURCEMANAGER_HOSTNAME: bigdata-hadoop1
 
-  hadoop2:
-    container_name: hadoop2
+  bigdata-hadoop2:
+    container_name: bigdata-hadoop2
     build:
       context: ./services/hadoop/2.7
     image: yinfuyuan/hadoop:2.7.6
-    hostname: hadoop2
+    hostname: bigdata-hadoop2
     environment:
       HADOOP_CLUSTER: "true"
-      FS_DEFAULTFS: hdfs://hadoop1:9000
-      SLAVES: hadoop2,hadoop3
+      FS_DEFAULTFS: hdfs://bigdata-hadoop1:9000
+      SLAVES: bigdata-hadoop2,bigdata-hadoop3
       DFS_REPLICATION: 2
-      YARN_RESOURCEMANAGER_HOSTNAME: hadoop1
+      YARN_RESOURCEMANAGER_HOSTNAME: bigdata-hadoop1
 
-  hadoop3:
-    container_name: hadoop3
+  bigdata-hadoop3:
+    container_name: bigdata-hadoop3
     build:
       context: ./services/hadoop/2.7
     image: yinfuyuan/hadoop:2.7.6
-    hostname: hadoop3
+    hostname: bigdata-hadoop3
     environment:
       HADOOP_CLUSTER: "true"
-      FS_DEFAULTFS: hdfs://hadoop1:9000
-      SLAVES: hadoop2,hadoop3
+      FS_DEFAULTFS: hdfs://bigdata-hadoop1:9000
+      SLAVES: bigdata-hadoop2,bigdata-hadoop3
       DFS_REPLICATION: 2
-      YARN_RESOURCEMANAGER_HOSTNAME: hadoop1
+      YARN_RESOURCEMANAGER_HOSTNAME: bigdata-hadoop1
