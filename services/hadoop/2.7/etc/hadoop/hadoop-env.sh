@@ -21,6 +21,8 @@
 # set JAVA_HOME in this file, so that it is correctly defined on
 # remote nodes.
 
+export USER=hadoop
+
 # The java implementation to use.
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
@@ -70,7 +72,7 @@ export HADOOP_SECURE_DN_USER=${HADOOP_SECURE_DN_USER}
 
 # Where log files are stored.  $HADOOP_HOME/logs by default.
 #export HADOOP_LOG_DIR=${HADOOP_LOG_DIR}/$USER
-export HADOOP_LOG_DIR=/hadoop/logs/$USER
+export HADOOP_LOG_DIR=/hadoop/logs
 
 # Where log files are stored in the secure data environment.
 #export HADOOP_SECURE_DN_LOG_DIR=${HADOOP_LOG_DIR}/${HADOOP_HDFS_USER}

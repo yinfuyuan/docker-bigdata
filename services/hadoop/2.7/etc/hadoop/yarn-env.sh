@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,9 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+export USER=hadoop
+
 # User for YARN daemons
 # export HADOOP_YARN_USER=${HADOOP_YARN_USER:-yarn}
-export HADOOP_YARN_USER=hadoop
+export HADOOP_YARN_USER=$USER
 
 # resolve links - $0 may be a softlink
 export YARN_CONF_DIR="${YARN_CONF_DIR:-$HADOOP_YARN_HOME/conf}"
@@ -90,7 +93,7 @@ fi
 IFS=
 
 export YARN_PID_DIR=/hadoop/tmp
-export YARN_LOG_DIR=/hadoop/logs/$USER
+export YARN_LOG_DIR=/hadoop/logs
 
 # default log directory & file
 if [ "$YARN_LOG_DIR" = "" ]; then

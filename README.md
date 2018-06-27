@@ -67,6 +67,17 @@ If this is not what you want, try starting after manually removing the build opt
     After you up the service you can use the host machine ip:50070 view the
     hdfs and use the host machine ip:8088 view yarn
     
+    Environment Variables
+    HADOOP_MASTER
+    HDFS_MASTER
+    YARN_MASTER
+    HISTORY_MASTER
+    HDFS_FS_DEFAULTFS
+    HDFS_SLAVES
+    HDFS_DFS_REPLICATION
+    HDFS_DFS_NAMENODE_SECONDARY_HTTP_ADDRESS
+    YARN_RESOURCEMANAGER_HOSTNAME
+    
 ### hbase
     
 **The service depends on zookeeper service, Start the zookeeper service before starting.**

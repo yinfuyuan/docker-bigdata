@@ -25,4 +25,8 @@
         <name>hadoop.tmp.dir</name>
         <value>/hadoop/tmp</value>
     </property>
+    <property>
+        <name>hadoop.http.staticuser.user</name>
+        <value>hadoop</value>
+    </property>
 </configuration>

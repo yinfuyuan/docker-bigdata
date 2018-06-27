@@ -37,4 +37,8 @@
         <name>dfs.permissions.superusergroup</name>
         <value>apache</value>
     </property>
+    <property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>0.0.0.0:50090</value>
+    </property>
 </configuration>
