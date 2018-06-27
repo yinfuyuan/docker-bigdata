@@ -18,17 +18,17 @@ RUN set -ex; \
     gosu hive cat /home/hive/.ssh/id_rsa.pub >> /home/hive/.ssh/authorized_keys; \
     gosu hive echo "StrictHostKeyChecking no" >> /home/hive/.ssh/config; \
     \
-    wget -O "hive-${HIVE_VERSION}-bin.tar.gz" "${HIVE_DOWNLOAD_URL}"; \
-    wget -O "hive-${HIVE_VERSION}-bin.tar.gz.asc" "${HIVE_ASC_URL}"; \
+    wget -O "apache-hive-${HIVE_VERSION}-bin.tar.gz" "${HIVE_DOWNLOAD_URL}"; \
+    wget -O "apache-hive-${HIVE_VERSION}-bin.tar.gz.asc" "${HIVE_ASC_URL}"; \
     wget -O "KEYS" "${HIVE_KEYS_URL}"; \
     \
     apt-get update; \
     apt-get install -y --no-install-recommends gnupg; \
     gpg --import KEYS; \
-    gpg --verify "hive-${HIVE_VERSION}-bin.tar.gz.asc" "hive-${HIVE_VERSION}-bin.tar.gz"; \
+    gpg --verify "apache-hive-${HIVE_VERSION}-bin.tar.gz.asc" "apache-hive-${HIVE_VERSION}-bin.tar.gz"; \
     \
     mkdir -p "${HIVE_HOME}"; \
-    tar -xzf "hive-${HIVE_VERSION}-bin.tar.gz" -C "${HIVE_HOME}" --strip-components=1; \
+    tar -xzf "apache-hive-${HIVE_VERSION}-bin.tar.gz" -C "${HIVE_HOME}" --strip-components=1; \
     \
     ln -s ${HIVE_HOME}/conf /etc/hive; \
     \
@@ -36,12 +36,19 @@ RUN set -ex; \
     \
     rm -rf \
         KEYS \
-        hive-${HIVE_VERSION}-bin.tar.gz \
-        hive-${HIVE_VERSION}-bin.tar.gz.asc \
-        ${HIVE_HOME}/docs \
+        apache-hive-${HIVE_VERSION}-bin.tar.gz \
+        apache-hive-${HIVE_VERSION}-bin.tar.gz.asc \
         /var/lib/apt/lists/*; \
     apt-get purge -y --auto-remove gnupg
 
+COPY conf/ ${HIVE_HOME}/conf/
+
 COPY docker-entrypoint.sh /usr/local/bin/
 
+WORKDIR /hive
+
+EXPOSE 10000
+
 ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD ["hiveserver2"]
