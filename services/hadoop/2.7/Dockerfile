@@ -64,8 +64,6 @@ COPY etc/hadoop/ ${HADOOP_HOME}/etc/hadoop/
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-EXPOSE 9000
-
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["start-all.sh"]
