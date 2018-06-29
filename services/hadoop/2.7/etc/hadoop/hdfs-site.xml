@@ -42,7 +42,11 @@
         <value>0.0.0.0:50090</value>
     </property>
     <property>
-        <name>dfs.namenode.secondary.https-address</name>
-        <value>0.0.0.0:50091</value>
+        <name>dfs.datanode.address</name>
+        <value>0.0.0.0:50010</value>
+    </property>
+    <property>
+        <name>dfs.datanode.ipc.address</name>
+        <value>0.0.0.0:50020</value>
     </property>
 </configuration>
