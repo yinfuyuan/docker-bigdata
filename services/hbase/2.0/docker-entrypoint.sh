@@ -21,25 +21,25 @@ fi
 sed -i "s/<\/configuration>/    <property>\n        <name>dfs.datanode.max.transfer.threads<\/name>\n        <value>4096<\/value>\n    <\/property>\n<\/configuration>/g" "${HADOOP_HOME}/etc/hadoop/hdfs-site.xml"
 
 if [[ -n "$HBASE_ROOTDIR" ]]; then
-    sed -i "/<name>hbase.rootdir<\/name>/{n;s/<value>.*<\/value>/<value>${HBASE_ROOTDIR////\\/}<\/value>/g}" "$HBASE_CONF_DIR/hbase-site.xml"
+    sed -i "/<name>hbase.rootdir<\/name>/{n;s/<value>.*<\/value>/<value>${HBASE_ROOTDIR////\\/}<\/value>/g}" "$HBASE_HOME/conf/hbase-site.xml"
 fi
 if [[ -n "$HBASE_REGION_SERVERS" ]]; then
-    echo -e "${HBASE_REGION_SERVERS/,/\\n}" > "$HBASE_HOME/conf/regionservers"
+    echo -e "${HBASE_REGION_SERVERS//,/\\n}" > "$HBASE_HOME/conf/regionservers"
 fi
 if [[ -n "$HBASE_BACKUP_MASTER" ]]; then
-    echo -e "${HBASE_BACKUP_MASTER/,/\\n}" > "$HBASE_HOME/conf/backup-masters"
+    echo -e "${HBASE_BACKUP_MASTER//,/\\n}" > "$HBASE_HOME/conf/backup-masters"
 fi
-sed -i "/<name>hbase.cluster.distributed<\/name>/{n;s/<value>.*<\/value>/<value>${HBASE_CLUSTER_DISTRIBUTED:-false}<\/value>/g}" "$HBASE_CONF_DIR/hbase-site.xml"
-sed -i "/<name>hbase.zookeeper.quorum<\/name>/{n;s/<value>.*<\/value>/<value>${HBASE_ZOOKEEPER_QUORUM:-localhost}<\/value>/g}" "$HBASE_CONF_DIR/hbase-site.xml"
+sed -i "/<name>hbase.cluster.distributed<\/name>/{n;s/<value>.*<\/value>/<value>${HBASE_CLUSTER_DISTRIBUTED:-false}<\/value>/g}" "$HBASE_HOME/conf/hbase-site.xml"
+sed -i "/<name>hbase.zookeeper.quorum<\/name>/{n;s/<value>.*<\/value>/<value>${HBASE_ZOOKEEPER_QUORUM:-localhost}<\/value>/g}" "$HBASE_HOME/conf/hbase-site.xml"
 echo "export HBASE_MANAGES_ZK=false" >> "$HBASE_HOME/conf/hbase-env.sh"
 
 if [ "$1" = 'start-hbase.sh' ]; then
     /etc/init.d/ssh start
     gosu hadoop hdfs namenode -format
-    if [[ -z "$HBASE_CLUSTER" || -n "$HDFS_MASTER" ]]; then
+    if [[ -z "$HBASE_CLUSTER_DISTRIBUTED" || -n "$HDFS_CLUSTER_MASTER" ]]; then
         gosu hadoop /usr/local/hadoop/sbin/start-dfs.sh
     fi
-    if [[ -z "$HBASE_CLUSTER" || -n "$HBASE_MASTER" ]]; then
+    if [[ -z "$HBASE_CLUSTER_DISTRIBUTED" || -n "$HBASE_CLUSTER_MASTER" ]]; then
         gosu hbase /usr/local/hbase/bin/start-hbase.sh
     fi
     gosu hbase tail -f /dev/null
