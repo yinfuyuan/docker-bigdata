@@ -14,20 +14,15 @@ services:
       - bigdata-zookeeper2
       - bigdata-zookeeper3
     ports:
-      - 50070:50070
       - 16010:16010
     environment:
-      HBASE_CLUSTER: "true"
-      HDFS_MASTER: "true"
-      HDFS_FS_DEFAULTFS: hdfs://bigdata-hbase1:9000
-      HDFS_SLAVES: bigdata-hbase2,bigdata-hbase3
-      HDFS_DFS_REPLICATION: 2
-      HBASE_ROOTDIR: hdfs://bigdata-hbase1:9000/hbase
       HBASE_CLUSTER_DISTRIBUTED: "true"
-      HBASE_MASTER: "true"
+      HBASE_CLUSTER_MASTER: "true"
+      HBASE_ROOTDIR: hdfs://bigdata-hbase2:9000/hbase
       HBASE_BACKUP_MASTER: bigdata-hbase2
       HBASE_REGION_SERVERS: bigdata-hbase2,bigdata-hbase3
       HBASE_ZOOKEEPER_QUORUM: bigdata-zookeeper1,bigdata-zookeeper2,bigdata-zookeeper3
+      HADOOP_CLUSTER_SLAVES: bigdata-hbase1,bigdata-hbase3
 
   bigdata-hbase2:
     container_name: bigdata-hbase2
@@ -35,20 +30,21 @@ services:
       context: ./services/hbase/2.0
     image: yinfuyuan/hbase:2.0.0
     hostname: bigdata-hbase2
+    ports:
+      - 50070:50070
     external_links:
       - bigdata-zookeeper1
       - bigdata-zookeeper2
       - bigdata-zookeeper3
     environment:
-      HBASE_CLUSTER: "true"
-      HDFS_FS_DEFAULTFS: hdfs://bigdata-hbase1:9000
-      HDFS_SLAVES: bigdata-hbase2,bigdata-hbase3
-      HDFS_DFS_REPLICATION: 2
-      HBASE_ROOTDIR: hdfs://bigdata-hbase1:9000/hbase
+      HBASE_ROOTDIR: hdfs://bigdata-hbase2:9000/hbase
       HBASE_CLUSTER_DISTRIBUTED: "true"
       HBASE_BACKUP_MASTER: bigdata-hbase2
       HBASE_REGION_SERVERS: bigdata-hbase2,bigdata-hbase3
       HBASE_ZOOKEEPER_QUORUM: bigdata-zookeeper1,bigdata-zookeeper2,bigdata-zookeeper3
+      HDFS_CLUSTER_MASTER: "true"
+      HDFS_FS_DEFAULTFS: hdfs://bigdata-hbase2:9000
+      HDFS_DFS_NAMENODE_SECONDARY_HTTP_ADDRESS: bigdata-hbase3:50090
 
   bigdata-hbase3:
     container_name: bigdata-hbase3
@@ -61,11 +57,9 @@ services:
       - bigdata-zookeeper2
       - bigdata-zookeeper3
     environment:
-      HBASE_CLUSTER: "true"
       HDFS_FS_DEFAULTFS: hdfs://bigdata-hbase1:9000
-      HDFS_SLAVES: bigdata-hbase2,bigdata-hbase3
-      HDFS_DFS_REPLICATION: 2
-      HBASE_ROOTDIR: hdfs://bigdata-hbase1:9000/hbase
+      HADOOP_CLUSTER_SLAVES: bigdata-hbase1,bigdata-hbase3
+      HBASE_ROOTDIR: hdfs://bigdata-hbase2:9000/hbase
       HBASE_CLUSTER_DISTRIBUTED: "true"
       HBASE_BACKUP_MASTER: bigdata-hbase2
       HBASE_REGION_SERVERS: bigdata-hbase2,bigdata-hbase3

@@ -46,8 +46,6 @@ COPY conf/ ${HBASE_HOME}/conf/
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
-EXPOSE 16000
-
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["start-hbase.sh"]
