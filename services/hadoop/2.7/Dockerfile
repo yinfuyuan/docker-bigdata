@@ -66,4 +66,6 @@ COPY docker-entrypoint.sh /usr/local/bin/
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
+EXPOSE 8020
+
 CMD ["start-all.sh"]
